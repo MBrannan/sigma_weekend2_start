@@ -1,0 +1,16 @@
+body {
+  background-color: lavender;
+}
+
+h1 {
+  color: goldenrod;
+}
+
+#nextStudentButton {
+  float: right;
+  background-color: gainsboro;
+}
+
+#previousStudentButton {
+  background-color: gainsboro;
+}
