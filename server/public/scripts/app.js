@@ -1,50 +1,60 @@
 var cohortMember = 0;
-var students = 0;
+var students;
+
 $(document).ready(function(){
   $.ajax({
     type: "GET",
     url: "/data",
     success: function(data) {
-      console.log(data.sigmanauts);
       students = data.sigmanauts;
       updateDom();
-        // var currStudent = students[cohortMember];
-        // $("#sigma").append().children().last('div class="person"></div>');
-        // var $el = $("#sigma").children().last();
-        //   $el.append('<h2>' + currStudent.git_username + '</h2>');
-        //   $el.append('<p>' + "Username: " + currStudent.name + '</p>');
-        //   $el.append('<p>' + "Shoutout: " + currStudent.shoutout + '</p>');
+      createCarousel();
+      moveCarousel();
 
       $("#nextStudentButton").on("click", function buttonNext() {
-        console.log("testing this");
-          for (var i = 0; i < students.length; i++) {
-              cohortMember++;
-              if (cohortMember === students.length - 1) {
-                cohortMember = 0;
-              }
-            }
-            updateDom();
-          });
-      $("#previousStudentButton").on("click", function buttonPrevious() {
-        console.log("testing");
-          for (var i = 0; i < students.length; i++) {
-              cohortMember--;
-              if (cohortMember === 0) {
-                cohortMember = students.length;
-              }
-            }
-          updateDom();
-          });
+      cohortMember++;
+      console.log("pls");
+        if (cohortMember >= students.length) {
+          cohortMember = 0;
         }
-      });
+      updateDom();
+      moveCarousel();
     });
 
-    function updateDom(data, i) {
-    var currStudent = students[cohortMember];
-    $("#sigma").append().children().last('div class="person"></div>');
-    var $el = $("#sigma").children().last();
-      $el.append('<h2>' + currStudent.git_username + '</h2>');
-      $el.append('<p>' + "Username " + currStudent.name + '</p>');
-      $el.append('<p>' + "Shoutout " + currStudent.shoutout + '</p>');
-      console.log(currStudent.name);
+      $("#previousStudentButton").on("click", function buttonPrevious() {
+      cohortMember--;
+        if (cohortMember < 0) {
+          cohortMember = students.length - 1;
+        }
+      updateDom();
+      moveCarousel();
+    });
+
+    function createCarousel() {
+      students.forEach(function(student, i) {
+        $("#carousel").append("<li></li>");
+        $("li").last().data("member", i);
+      });
+    };
+
+    function moveCarousel() {
+      $("#carousel").children().each(function(i, item) {
+      console.log($("#carousel").children());
+      if ($(this).data("member") == cohortMember) {
+        $(this).addClass("cohortMember");
+      } else {
+        $(this).removeClass("cohortMember");
+      }
+    });
   }
+    function updateDom() {
+    var currStudent = students[cohortMember];
+    // $("#sigma").append().children().last('div class="person"></div>');
+    // var $el = $("#sigma").children().last();
+      $("#githubLink").html(currStudent.git_username);
+      $("#name").text(currStudent.name);
+      $("#shoutout").html(currStudent.shoutout);
+    }
+  }
+});
+});
